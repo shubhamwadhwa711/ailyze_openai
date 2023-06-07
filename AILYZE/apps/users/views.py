@@ -89,10 +89,6 @@ class ChangePassword(View):
 
 
 class UploadFileChoice(View):
-    def handle_uploaded_file(f):  
-        with open('myapp/static/upload/'+f.name, 'wb+') as destination:  
-            for chunk in f.chunks():  
-                destination.write(chunk)  
                 
     def get(self, request):
         form = UplaodFileForm()
@@ -109,7 +105,6 @@ class UploadFileChoice(View):
                 uploaded_file = [uploaded_file]
             instance=FileHandler(uploaded_file)
             df=instance.upload_documents(max_documents=50,max_words=10000)
-            print(" succesfully", df)
         except Exception as e:
                 print("This is is Exception as ", e)
         if form.is_valid():
@@ -155,32 +150,66 @@ class UserQuery(View):
 
 
 class ProcessQuery(View):
-    # a = {
-    #     Anaylsis.Summarize.value: lambda request: render(request,'chioceform.html',{'forms':SummerizeType()}),
-    #     Anaylsis.Ask_a_specific_question.value:  lambda request:render(request,'chioceform.html',{'forms':SPecificQuestion()}),
-    #     Anaylsis.Conduct_thematic_analysis.value: lambda request: render(request,'chioceform.html',{'forms':ThemeType()}),
-    #     Anaylsis.Identidy_which_document_contain_a_certain_viewpoint.value:  lambda request: render(request,'chioceform.html',{'forms':IdentifyViewpoint()}),
-    #     Anaylsis.Compare_viewpoints_across_documents.value:  lambda request: render(request,'chioceform.html',{'forms':CompareViewpoint()})
-    # }
     def post(self,request):
+        
+        form = UplaodFileForm(request.POST, request.FILES)
+        uploaded_file = request.FILES.getlist('file')
+        upload_option = request.POST['upload_option']
         choice=request.session.get('choice')
-        variables = {
-        "Summarize": ["summary", "instruction"],
-        "Ask_a_specific_question": ["question", "instruction", "keywords"],
-        "Conduct_thematic_analysis": ["theme_type", "instruction"],
-        "Identidy_which_document_contain_a_certain_viewpoint": ["instruction"],
-        "Compare_viewpoints_across_documents": ["instruction", "question"]
-    }    
-        if choice in variables:
-            print("-------------------------------------", choice)
-            values = [request.POST.get(var, '') for var in variables[choice]]
-            summary_value = values[variables[choice].index("summary")]
-            instruction_value = values[variables[choice].index("instruction")]
-            quetion = summary_value + instruction_value
-            answer = "good"
-            UserQuery.objects.create(question=quetion, answer=answer , user = self.request.user)
-            return HttpResponse("Done ")
-        return HttpResponse("Not Done ")
+
+        choices
+
+        if choice==Anaylsis.Summarize.value:
+            summary_type=request.POST.get('summary')
+            summary_instruction=request.POST.get('instruction')
+            print(summary_type,summary_instruction)
+    
+        if choice==Anaylsis.Ask_a_specific_question.value:
+            question=request.POST.get('question')
+            quesion_instruction=request.POST.get('instruction')
+            question_keyword=request.POST.get('keywords')
+            print(question,quesion_instruction,question_keyword)
+
+        if choice==Anaylsis.Conduct_thematic_analysis.value:
+            theme_type=request.POST.get('theme_type')
+            instruction=request.POST.get('instruction')
+            print(theme_type,instruction)
+            
+        if choice==Anaylsis.Identidy_which_document_contain_a_certain_viewpoint.value:
+            instruction=request.POST.get('instruction')
+            print(instruction)
+
+        if choice==Anaylsis.Compare_viewpoints_across_documents.value:
+            question=request.POST.get('question')
+            instruction=request.POST.get('instruction')
+            print(question,instruction)
+
+        print(uploaded_file,upload_option,choice)
+        return HttpResponse("Done")
+
+        # if not isinstance(uploaded_file, list):
+        #     uploaded_file = [uploaded_file]
+        # instance=FileHandler(uploaded_file)
+        # df=instance.upload_documents(max_documents=50,max_words=10000)
+
+    # def post(self,request):
+    #     choice=request.session.get('choice')
+    #     variables = {
+    #     "Summarize": ["summary", "instruction"],
+    #     "Ask_a_specific_question": ["question", "instruction", "keywords"],
+    #     "Conduct_thematic_analysis": ["theme_type", "instruction"],
+    #     "Identidy_which_document_contain_a_certain_viewpoint": ["instruction"],
+    #     "Compare_viewpoints_across_documents": ["instruction", "question"]
+    # }    
+    #     if choice in variables:
+    #         values = [request.POST.get(var, '') for var in variables[choice]]
+    #         summary_value = values[variables[choice].index("summary")]
+    #         instruction_value = values[variables[choice].index("instruction")]
+    #         quetion = summary_value + instruction_value
+    #         answer = "good"
+    #         UserQuery.objects.create(question=quetion, answer=answer , user = self.request.user)
+    #         return HttpResponse("Done ")
+    #     return HttpResponse("Not Done ")
 
     
 

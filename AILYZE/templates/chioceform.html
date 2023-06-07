@@ -4,15 +4,11 @@
 {% load widget_tweaks %} 
 
 <div id="choiceva">
-    <form method="post" hx-post="{% url 'processing' %}" hx-target="#processedform" novalidate>
-        {% csrf_token %}
         <div class="form-group">
             {% for f in forms %}
             {{ f.label }} {{ f }} {{ f.errors|striptags }}<br>
             {% endfor %}
         </div>
-        <button type="submit">Submit</button>
-    </form>
 </div> 
 <div id="processedform">
     

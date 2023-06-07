@@ -10,6 +10,7 @@ import warnings
 import os
 import json
 import docx2txt
+import openpyxl
 
 import io
 openai.api_key = "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"
@@ -87,11 +88,19 @@ class FileHandler:
     
         
     def process_uploaded_excel(self,dat):
-        if dat.name.endswith('.xls') or dat.name.endswith('.xlsx'):
-            df = pd.read_excel(dat)
-        else:
-            df = pd.read_csv(dat)
-        self.data=df
+        try:
+            if dat.name.endswith('.xls') or dat.name.endswith('.xlsx'):
+                df = pd.read_excel(dat)
+            else:
+                df = pd.read_csv(dat)
+
+            return df
+        except Exception as e:
+            raise Exception("Something Went wrong ")
+                
+
+   
+
     
 
     def _process_uploaded_documents(self, max_documents, max_words):
@@ -137,10 +146,11 @@ class FileHandler:
                     if len(self.files) != 1:
                         raise Exception('Only one Excel file is allowed. Remove all other files except the Excel file.')
                     else:
-                        self.process_uploaded_excel(dat)
+                        df=self.process_uploaded_excel(dat)
                         print('Note: This feature to analyze spreadsheets is still in beta.')
-                        return
-            self._process_uploaded_documents(max_documents, max_words)
+                        return df
+            data=self._process_uploaded_documents(max_documents, max_words)
+            return data
 
 
 
@@ -148,7 +158,7 @@ class FileHandler:
 
 class BaseChoiceHandler:
     file_handler = None
-    is_excel = False
+    is_excel = False 
 
     def _to_excel(df):
         buffer = io.BytesIO()

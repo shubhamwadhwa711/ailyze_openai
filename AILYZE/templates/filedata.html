@@ -15,7 +15,7 @@
         </div>
     </div>
 </div> 
-<form action="/get-form/" method="POST" enctype="multipart/form-data" novalidate >
+<form action="/processing/" method="POST" enctype="multipart/form-data" novalidate >
     {% csrf_token %}
     <label for="{{ form.upload_option.id_for_label }}">Choose a file option :</label>
     <select name="{{ form.upload_option.name }}" id="{{ form.upload_option.id_for_label }}">

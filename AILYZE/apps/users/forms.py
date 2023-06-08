@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import PasswordChangeForm,UserCreationForm,AuthenticationForm
-from apps.users.models import User,Files
+from apps.users.models import User,Files,ContactModel
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from apps.users.enum import Anaylsis
@@ -33,7 +33,10 @@ class UplaodFileForm(forms.ModelForm):
 
     
 
-
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model=ContactModel
+        fields=['name','email','message','subject']
 
 
             
@@ -75,7 +78,7 @@ class ThemeType(forms.Form):
     ]
     theme_type=forms.ChoiceField(choices=SUMMARY_CHOICE)
     instruction=forms.CharField(widget=forms.Textarea(
-        attrs={'placeholder':'Additional instructions regarding your desired response'}
+        attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style):'}
     ))
 
 
@@ -97,6 +100,12 @@ class CompareViewpoint(forms.Form):
     ))
     instruction=forms.CharField(widget=forms.Textarea(
         attrs={'placeholder':'Participant 1, 2, 3, 4, 5 and 6 are male. Participants 7, 8, 9, 10, 11 and 12 are female."'}
+    ))
+    instruction_only=forms.CharField(widget=forms.Textarea(
+        attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style)'}
+    ))
+    keywords=forms.CharField(widget=forms.Textarea(
+        attrs={'placeholder':'Keywords or section names to help chatbot extract relevant parts of the document to analyze'}
     ))
 
 

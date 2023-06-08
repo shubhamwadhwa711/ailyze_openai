@@ -67,3 +67,14 @@ class UserQuery(models.Model):
 
 
 
+
+class ContactModel(models.Model):
+    name=models.CharField(max_length=100)
+    email = models.EmailField(blank=False, null=False)
+    subject=models.CharField(max_length=100)
+    message=models.TextField(max_length=500)
+
+
+
+
+

@@ -15,9 +15,10 @@
                     <div class="navbar-nav ms-auto">
                         <a href="/" class="nav-item nav-link active">Home</a>
                         <a href="/" class="nav-item nav-link">About</a>
-                        <a href="/" class="nav-item nav-link">Services</a>
-                        <a href="/" class="nav-item nav-link">Projects</a>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        {% if not request.user.is_authenticated %}
+                            <a href="/trytech" class="nav-item nav-link">Try AI Tech</a>
+                        {% endif %}
+                        <a href="/contact/" class="nav-item nav-link">Contact</a>
                         <butaton type="button" class="btn text-white p-0 d-none d-lg-block mx-2" data-bs-toggle="modal"
                         data-bs-target="#searchModal" ><i class="fa fa-search"></i></butaton>
 

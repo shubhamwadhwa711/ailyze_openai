@@ -4,13 +4,9 @@
 {% load widget_tweaks %} 
 
 <div id="choiceva">
-        <div class="form-group">
             {% for f in forms %}
             {{ f.label }} {{ f }} {{ f.errors|striptags }}<br>
             {% endfor %}
-        </div>
-</div> 
-<div id="processedform">
     
 </div>
 

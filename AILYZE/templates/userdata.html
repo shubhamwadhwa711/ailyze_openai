@@ -1,0 +1,33 @@
+<div class="row" id="list">
+    <div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">Question</th>
+            <th scope="col">Answer</th>
+          </tr>
+        </thead><tbody>
+    {% if userdata %}
+        {% for i in userdata %}
+            <tr>
+                <td>{{i.id}}</td>
+                <td>{{ i.date }}</td>
+                <td>{{ i.time }}</td>
+                <td>{{ i.question }}</td>
+                <td>{{ i.answer }}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="5">
+                <div class="text-danger fw-bold fs-6">No data found!</div>
+            </td>
+        </tr>
+    {% endif %}
+</tbody>
+</table>
+</div>
+</div>

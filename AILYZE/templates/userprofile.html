@@ -16,39 +16,35 @@
 </div> 
 <!-- Hero End --> 
 
-<div class="container Pt-5">
-    <a href="/get-form"><div class="btn btn-sm border rounded-pill text-black  fw-bold px-3 m-3 bg-warning">Try Ai.tech</div></a>
+<div class="container pt-5">
+    <a href="/get-form"><div class="btn btn-sm border rounded-pill text-black  fw-bold px-3 m-3 bg-info">Ai.tech  </div></a>
 </div>
 
 <p>
-    <a class="btn btn-sm border rounded-pill text-black fw-bold px-3 m-3 bg-warning" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="True" hx-get='/view-list'hx-target="#list"  aria-controls="multiCollapseExample1">View Past Questions and Answers <i class="fa fa-caret-down"></i></a>
+  <p>
+    <a class="btn btn-sm border rounded-pill text-black fw-bold px-3 m-3 bg-info"
+       data-bs-toggle="collapse"
+       href="#multiCollapseExample1"
+       role="button"
+       aria-expanded="True"
+       hx-get="/view-list"
+       hx-target="#list"
+       hx-swap="outerHTML" 
+       aria-controls="multiCollapseExample1"
+    >
+        View Past Questions and Answers <i class="fa fa-caret-down"></i>
+    </a>
 </p>
-  <div class="row" id="list">
-    <div class="collapse multi-collapse" id="multiCollapseExample1">
-        <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col"></th>
-                <th scope="col">Date</th>
-                <th scope="col">Time</th>
-                <th scope="col">Question</th>
-                <th scope="col">Answer</th>
-              </tr>
-            </thead>
-            <tbody>
-                {% if form %}
-                 
-                {% else %}
-                <div class="text-danger fw-bold fs-6">No data found!</div>
-                {% endif %}
-             
-            </tbody>
-          </table>
-    
-
-    </div>
-    
-    
+<div class="row" id="list">
+  <div class="collapse multi-collapse" id="multiCollapseExample1">
+      <table class="table table-bordered">
+        <div id="list">
+  
+        </div>     
+      </table>
   </div>
+</div>
+
+</div>
 
 {% endblock%}

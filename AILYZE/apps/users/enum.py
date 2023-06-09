@@ -12,3 +12,12 @@ class Anaylsis(Enum):
     def choices(cls):
         return {i.name:i.value for i in Anaylsis}
 
+
+class Excelchoice(Enum):
+    Conduct_thematic_analysis_based_on_text_in_a_column = "Conduct_thematic_analysis_based_on_text_in_a_column"
+    Categorize_text_in_each_cell_in_a_column = "Categorize_text_in_each_cell_in_a_column"
+
+    @classmethod
+    def choices(cls):
+        return {i.name:i.value for i in Excelchoice}
+

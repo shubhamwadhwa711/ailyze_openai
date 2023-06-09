@@ -15,6 +15,9 @@
         </div>
     </div>
 </div> 
+
+
+
 <form action="/processing/" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <label for="{{ form.upload_option.id_for_label }}">Choose a file option:</label>
@@ -23,19 +26,17 @@
         <option value="previous">Upload Files from Previous Uploads</option>
     </select>
     <div class="form-group">
-        <label for="{{ form.file.id_for_label }}" class="form-label"></label>
-        {% render_field form.file hx-get='/get-choices' hx-target='#choice' %}
+    <label for="{{ form.file.id_for_label }}" class="form-label"></label>
+        {% csrf_token %}
+        {% render_field form.file hx-post="/get-form/" hx-target="#choice" hx-encoding="multipart/form-data" %}
         <span class="text-danger">{{ form.file.errors|striptags }}</span>
-    </div>
+
+</div>
     <div id="choice">
-        {% include 'choices.html' %}
+  
     </div>
-    <div id="choiceva">
-        {% for field in forms.visible_fields %}
-            {{ field.label }} {{ field }} <span class="text-danger">{{ field.errors|striptags }}</span><br>
-        {% endfor %}
-    </div>
-    <div id="processedform"></div>
+
+ 
     <button type="submit">Upload file</button>
 </form>
 

@@ -4,6 +4,8 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 from apps.users.enum import Anaylsis
 from multiupload.fields import MultiFileField
+import pandas as pd
+import openpyxl
 
 class RegisterUser(UserCreationForm):
     class Meta:
@@ -17,7 +19,7 @@ class UserChangePassword(PasswordChangeForm):
         fields=['old_password','new_password1','new_password2']
 
 
-
+Column_values=[]
 class UplaodFileForm(forms.ModelForm):
     UPLOAD_CHOICES = [
         ('new', 'Upload New File'),
@@ -30,24 +32,34 @@ class UplaodFileForm(forms.ModelForm):
         model = Files
         fields = ['upload_option', 'file', 'email']
 
+    def clean_message(self):
+        message = self.cleaned_data['file']
+        print("=================",message) # remove all "a"s from message
+     
+        return message
 
-    
+
+
+
+
+
+
+
+    # def clean_file(self):
+    #     files = self.cleaned_data['file']
+    #     print("fewkfhnjewrkftjewrkifhuierwhftguijrehftguierhtuierhtuiewrhtoijewrjhftguierwhfgoiewrhftiuorewhtfiuert9oi")
+    #     for file in files:
+    #         if file.name.endswith('.xlsx') or file.name.endswith('.xls'):
+    #             df=pd.read_excel(file)
+    #             column_values=df.columns.values.tolist()
+    #             Column_values.append(column_values)
+
+
 
 class ContactForm(forms.ModelForm):
     class Meta:
         model=ContactModel
         fields=['name','email','message','subject']
-
-
-            
-
-
-
-
-
-
-
-
 class SummerizeType(forms.Form):
     SUMMARY_CHOICES = [
         ('Essay', 'Essay'),
@@ -57,7 +69,6 @@ class SummerizeType(forms.Form):
     instruction=forms.CharField(widget=forms.Textarea(
         attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style)'}
     ))
-    
 class SPecificQuestion(forms.Form):
     question=forms.CharField(required=True,error_messages={
         'required': 'Please enter your question option.'},widget=forms.Textarea(
@@ -69,8 +80,6 @@ class SPecificQuestion(forms.Form):
     keywords=forms.CharField(widget=forms.Textarea(
         attrs={'placeholder':'Keywords or section names to help chatbot extract relevant parts of the document to analyze'}
     ))
-
-
 class ThemeType(forms.Form):
     SUMMARY_CHOICE = [
         ('Codebook', 'Codebook'),
@@ -81,18 +90,10 @@ class ThemeType(forms.Form):
         attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style):'}
     ))
 
-
-
-
 class IdentifyViewpoint(forms.Form):
     instruction=forms.CharField(widget=forms.Textarea(
         attrs={'placeholder':'Participants generally trust medical professionals about the flu and vaccine'}
     ))
-
-
-
-
-
 class CompareViewpoint(forms.Form):
     question=forms.CharField(required=True,error_messages={
         'required': 'Please enter your question option.'},widget=forms.Textarea(
@@ -109,5 +110,27 @@ class CompareViewpoint(forms.Form):
     ))
 
 
-    
-    
+
+
+
+
+class ExcelForm(forms.Form):
+    excel_choices=[
+        ('Codebook', 'Codebook'),
+        ('Essay', 'Essay'),
+    ]
+    file_column=forms.ChoiceField()
+    theme_type=forms.ChoiceField(choices=excel_choices)
+    theme_instructions=forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder':'Additional instructions regarding your desired response.Focus on contradicting views. Reply in French'}
+    ))
+
+class CategoriesForm(forms.Form):
+    file_column=forms.ChoiceField()
+    categories=forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder':'Specify the categories (separated by commas),  happy, neutral, sad'
+    }))
+    categorize_instructions=forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder':'Additional instructions regarding your desired response.Focus on contradicting views. Reply in French'
+    }))
+  

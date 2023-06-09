@@ -89,18 +89,14 @@ class FileHandler:
     def process_uploaded_excel(self,dat):
         try:
             if dat.name.endswith('.xls') or dat.name.endswith('.xlsx'):
-                df = pd.read_excel(dat)
+                df = pd.read_excel(dat,engine='openpyxl')
             else:
                 df = pd.read_csv(dat)
-
+            
+            df=pd.DataFrame(data={'text': df, 'n_tokens': df.apply(lambda x: len(tokenizer.encode(x)))})
             return df
         except Exception as e:
             raise Exception("Something Went wrong ")
-                
-
-   
-
-    
 
     def _process_uploaded_documents(self, max_documents, max_words):
         filenames = []

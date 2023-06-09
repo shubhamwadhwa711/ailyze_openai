@@ -2,11 +2,45 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
  {%load static %}
 {% load widget_tweaks %} 
-
 <div id="choiceva">
-            {% for f in forms %}
-            {{ f.label }} {{ f }} {{ f.errors|striptags }}<br>
-            {% endfor %}
+    {% if forms %}
+    {% if name=='Excel' %}
+    <label for="excel_column_value">Select the column name to analyze (only the first row in the first sheet will be read)</label>
+    <select name="file_column" id="excel_column_value">
+        <option value="">--Please choose an option--</option>
+        {% for i  in choices %}
+        <option value="{{i}}">{{i}}</option>
+        {% endfor %}
+    </select>
+    <label for="theme_t"> Theme Type </label>
+    <select name="theme_type" id="theme_t">
+        <option value="">--Please choose an option--</option>
+        <option value="Codebook">Codebook</option>
+        <option value="Essay">Essay</option>
+    </select>
+    <label for="theme_ins"> Theme Instruction </label>
+    <input type="text" name="theme_instructions" id="theme_ins" placeholder="Additional instructions regarding your desired response">
+    {% endif %}
+
+    {% if name=='ExcelCategory' %}
+    <label for="excel_column_value_cat">Select the column name to analyze (only the first row in the first sheet will be read):</label>
+    <select name="file_column" id="excel_column_value_cat">
+        <option value="">--Please choose an option--</option>
+        {% for i  in choices %}
+        <option value="{{i}}">{{i}}</option>
+        {% endfor %}
+    </select>
+    <label for="categor"> Categories</label>
+    <input type="text" name="categories" id="categor" placeholder="Specify the categories (separated by commas):">
+    <label for="categor_ins"> Categories Instruction</label>
+    <input type="text" name="categorize_instructions" id="categor_ins" placeholder="Categorize each text into one or more categories. Happy means elated and blessed. Sad means disappointed or grief. Neutral is anything in between.'">
+   {% else %}
+   {% for f in forms %}
+   {{f.label}}{{f}}{{f.errors|striptags}}
+   {% endfor %}
+    {% endif %}
+{% endif %}
+
     
 </div>
 

@@ -2,6 +2,7 @@
 {% block content %}
 {%load static %}
 {% load widget_tweaks %}
+
  {% comment %} <div class="custom-navbar" style="background:black; height:-75px;" ></div> {% endcomment %}
     <!-- Hero Start -->
     <div class="container-fluid pt-5 bg-primary hero-header">
@@ -22,18 +23,18 @@
           </div>
       </div>
   </div> 
-  <!-- Hero End --> 
+  
 
 
   <div class="container-fluid bg-light py-5">
     <div class="container py-5">
         <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
-        </div>
+        </div class="card">
         <form id="Login-form" action={% url 'login' %} method="POST" novalidate>
           {%csrf_token %}
           <div class="form-group">
             <label for="{{ form.username.id_for_label }}" class="form-label"><i class="fa-solid fa-envelope"></i></label>
-            {%render_field form.username  hx-post="/check-email/" hx-target="#emailvalid" hx-trigger="keyup delay:3s"  placeholder="Enter your email" %}
+            {%render_field form.username placeholder="Enter your email" %}
           </div>
           <div class="form-group">
             <label for="{{ form.password.id_for_label }}" class="form-label"><i class="fa-solid fa-lock"></i></label>
@@ -44,15 +45,13 @@
                 {% for error in form.non_field_errors %}
                     {{ error }}
                 {% endfor %}
-              </div>
+              </div></span>
             <div class="form-group">
               <button type="submit">Login</button>
               </div>
-  
-           
         </form>
       </div>
-  </div>
+  </div> 
 
 {% endblock %}
 

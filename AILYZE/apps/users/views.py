@@ -12,12 +12,13 @@ from django.contrib.auth import update_session_auth_hash
 from apps.users.enum import Anaylsis,Excelchoice
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
-from apps.users.utils import FileHandler,SumarrizeClass,QuestionClass,ThemeAnalysisClass,FrequencyHandlerClass,CompareViewPointsClass
+from apps.users.utils import FileHandler,SumarrizeClass,QuestionClass,ThemeAnalysisClass,FrequencyHandlerClass,CompareViewPointsClass,ExcelTheme,ExcelCategories
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 import os
 import pandas as pd
 import openpyxl
+from django.contrib import messages
 
 
 class Home(View):
@@ -112,13 +113,13 @@ class Getchoices(View):
 
 class UserQuestion(View):
     a = {
-        Anaylsis.Summarize.value: lambda request: render(request,'chioceform.html',{'forms':SummerizeType()}),
-        Anaylsis.Ask_a_specific_question.value:  lambda request:render(request,'chioceform.html',{'forms':SPecificQuestion()}),
-        Anaylsis.Conduct_thematic_analysis.value: lambda request: render(request,'chioceform.html',{'forms':ThemeType()}),
-        Anaylsis.Identidy_which_document_contain_a_certain_viewpoint.value:  lambda request: render(request,'chioceform.html',{'forms':IdentifyViewpoint()}),
-        Anaylsis.Compare_viewpoints_across_documents.value:  lambda request: render(request,'chioceform.html',{'forms':CompareViewpoint()}),
-        Excelchoice.Conduct_thematic_analysis_based_on_text_in_a_column.value:lambda request:render(request,'chioceform.html',{'forms':ExcelForm(),'choices':request.session['column_values'],'name':'Excel'}),
-        Excelchoice.Categorize_text_in_each_cell_in_a_column.value:lambda request:render(request,'chioceform.html',{'forms':CategoriesForm(),'choices':request.session['column_values'],'name':'ExcelCategory'})
+        Anaylsis.Summarize.value: lambda request,name: render(request,'chioceform.html',{'forms':SummerizeType(),"name":None}),
+        Anaylsis.Ask_a_specific_question.value:  lambda request,name:render(request,'chioceform.html',{'forms':SPecificQuestion(),"name":None}),
+        Anaylsis.Conduct_thematic_analysis.value: lambda request,name: render(request,'chioceform.html',{'forms':ThemeType(),"name":None}),
+        Anaylsis.Identidy_which_document_contain_a_certain_viewpoint.value:  lambda request,name: render(request,'chioceform.html',{'forms':IdentifyViewpoint(),"name":None}),
+        Anaylsis.Compare_viewpoints_across_documents.value:  lambda request,name: render(request,'chioceform.html',{'forms':CompareViewpoint(),"name":None}),
+        Excelchoice.Conduct_thematic_analysis_based_on_text_in_a_column.value:lambda request ,name:render(request,'chioceform.html',{'forms':ExcelForm(),'choices':request.session['column_values'],'name':name}),
+        Excelchoice.Categorize_text_in_each_cell_in_a_column.value:lambda request, name:render(request,'chioceform.html',{'forms':CategoriesForm(),'choices':request.session['column_values'],'name':name})
     }
     def post(self, request):
         choice = request.POST.get('choice')
@@ -126,7 +127,9 @@ class UserQuestion(View):
         render_fun = self.a.get(choice)
         if not render_fun:
             return render(request,'chioceform.html',{'forms':SummerizeType()}),
-        return render_fun(request)
+        name = 'Excel' if choice == Excelchoice.Conduct_thematic_analysis_based_on_text_in_a_column.value else 'ExcelCategory' if choice == Excelchoice.Categorize_text_in_each_cell_in_a_column.value else None
+        return render_fun(request, name=name)
+
 
 class ProcessQuery(View):
     def post(self, request):
@@ -135,6 +138,7 @@ class ProcessQuery(View):
         uploaded_file = request.FILES.getlist('file')
         upload_option = request.POST['upload_option']
         choice = request.session.get('choice')
+        file_column=request.POST['file_column']
         if form.is_valid():
             if not isinstance(uploaded_file, list):
                 uploaded_file = [uploaded_file]
@@ -153,9 +157,9 @@ class ProcessQuery(View):
                         return redirect('/user-profile')
                     else:
                         UserQuery.objects.create(question={'Summary_type':summary_type,"Summary_instruction":summary_instruction},answer=response['summary'])
-                        return render(request,'techdemo.html',{"response":response})
-                
-                return render(request,'filedata.html',{'forms':forms})
+                        return render(request,'techdemo.html',{"response":response})       
+                messages.error(request,forms.errors)
+                return render(request,'filedata.html')
             if choice==Anaylsis.Ask_a_specific_question.value:
                 forms=SPecificQuestion(request.POST)
                 if forms.is_valid():
@@ -170,7 +174,8 @@ class ProcessQuery(View):
                     else:
                         data=UserQuery.objects.create(question={'question':question,"quesion_instruction":quesion_instruction,'question_keyword':question_keyword},answer=response)
                         return render(request,'techdemo.html',{"response":data})
-                return render(request,'filedata.html',{'forms':forms})
+                messages.error(request,forms.errors)
+                return render(request,'filedata.html')
             if choice==Anaylsis.Conduct_thematic_analysis.value:
                 forms=ThemeType(request.POST)
                 if forms.is_valid():
@@ -184,7 +189,8 @@ class ProcessQuery(View):
                     else:
                         UserQuery.objects.create(question={'theme_type':theme_type,"instruction":instruction},answer=response['answer'])
                         return render(request,'techdemo.html',{"response":response})
-                return render(request,'filedata.html',{'forms':forms})
+                messages.error(request,forms.errors)
+                return render(request,'filedata.html')
             
             if choice==Anaylsis.Identidy_which_document_contain_a_certain_viewpoint.value:
                 forms=IdentifyViewpoint(request.POST)
@@ -198,7 +204,8 @@ class ProcessQuery(View):
                     else:
                         UserQuery.objects.create(question={" Frequency_instruction":instruction},answer=response['answer'])
                         return render(request,'techdemo.html',{"response":response})
-                return render(request,'filedata.html',{'forms':forms})
+                messages.error(request,forms.errors)
+                return render(request,'filedata.html')
                 
             if choice==Anaylsis.Compare_viewpoints_across_documents.value:
                 forms=CompareViewpoint(request.POST)
@@ -215,9 +222,48 @@ class ProcessQuery(View):
                     else:
                         UserQuery.objects.create(question={" question":question,'instruction':instruction,'keywords':keywords,'instruction_only':instruction_only},answer=response)
                         return render(request,'techdemo.html',{"response":response})
-                return render(request,'filedata.html',{'forms':forms})
+                messages.error(request,forms.errors)
+                return render(request,'filedata.html')
+            
+            if choice==Excelchoice.Conduct_thematic_analysis_based_on_text_in_a_column.value:
+                choices=request.session['column_values']
+                forms=ExcelForm(request.POST)
+                forms.fields['file_column'].choices = [(choice, choice) for choice in choices] 
+                if forms.is_valid():
+                    file_column=forms.cleaned_data['file_column']
+                    theme_type_excel=forms.cleaned_data['theme_type']
+                    theme_instructions=forms.cleaned_data['theme_instructions']
+                    instance=ExcelTheme(file_column=file_column,theme_type_excel=theme_type_excel,theme_instructions=theme_instructions,acesss=self.request.user.is_authenticated)
+                    response=instance.excel_themes(df)
+                    if request.user.is_authenticated:       
+                        UserQuery.objects.create(user=self.request.user, question={" question":file_column,'theme_type_excel':theme_type_excel,'theme_instructions':theme_instructions},answer=response)             
+                        return redirect('/user-profile')
+                    else:
+                        UserQuery.objects.create(question={" question":file_column,'theme_type_excel':theme_type_excel,'theme_instructions':theme_instructions},answer=response)
+                        return render(request,'techdemo.html',{"response":response})
+                messages.error(request,forms.errors)
+                return render(request,'filedata.html')
+            
+            if choice==Excelchoice.Categorize_text_in_each_cell_in_a_column.value:
+                choices=request.session['column_values']
+                forms=CategoriesForm(request.POST)
+                forms.fields['file_column'].choices = [(choice, choice) for choice in choices] 
+                if forms.is_valid():
+                    file_column=forms.cleaned_data['file_column']
+                    categories=forms.cleaned_data['categories']
+                    categorize_instructions=forms.cleaned_data['categorize_instructions']
+                    instance=ExcelCategories(file_column=file_column,categorize=categories,catgorize_instruction=categorize_instructions,access=self.request.user.is_authenticated)
+                    response=instance.excel_categorize(df)
+                    if request.user.is_authenticated:       
+                        UserQuery.objects.create(user=self.request.user, question={" question":file_column,'categories':categories,'categorize_instructions':categorize_instructions},answer=response)             
+                        return redirect('/user-profile')
+                    else:
+                        UserQuery.objects.create(question={" question":file_column,'categories':categories,'categorize_instructions':categorize_instructions},answer=response)
+                        return render(request,'techdemo.html',{"response":response})
+                messages.error(request,forms.errors)
+                return render(request,'filedata.html')
                      
-        else:
+        else:   
             form = UplaodFileForm(request.POST, request.FILES)
         return render(request, 'filedata.html', {'form': form})
 

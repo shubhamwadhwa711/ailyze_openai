@@ -32,27 +32,8 @@ class UplaodFileForm(forms.ModelForm):
         model = Files
         fields = ['upload_option', 'file', 'email']
 
-    def clean_message(self):
-        message = self.cleaned_data['file']
-        print("=================",message) # remove all "a"s from message
-     
-        return message
 
 
-
-
-
-
-
-
-    # def clean_file(self):
-    #     files = self.cleaned_data['file']
-    #     print("fewkfhnjewrkftjewrkifhuierwhftguijrehftguierhtuierhtuiewrhtoijewrjhftguierwhfgoiewrhftiuorewhtfiuert9oi")
-    #     for file in files:
-    #         if file.name.endswith('.xlsx') or file.name.endswith('.xls'):
-    #             df=pd.read_excel(file)
-    #             column_values=df.columns.values.tolist()
-    #             Column_values.append(column_values)
 
 
 
@@ -60,13 +41,16 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model=ContactModel
         fields=['name','email','message','subject']
+
+
+        
 class SummerizeType(forms.Form):
     SUMMARY_CHOICES = [
         ('Essay', 'Essay'),
         ('Bullet points', 'Bullet points'),
     ]
     summary=forms.ChoiceField(choices=SUMMARY_CHOICES)
-    instruction=forms.CharField(widget=forms.Textarea(
+    instruction=forms.CharField(required=False,widget=forms.Textarea(
         attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style)'}
     ))
 class SPecificQuestion(forms.Form):
@@ -74,10 +58,10 @@ class SPecificQuestion(forms.Form):
         'required': 'Please enter your question option.'},widget=forms.Textarea(
         attrs={'placeholder':'Enter your Question'}
     ))
-    instruction=forms.CharField(widget=forms.Textarea(
+    instruction=forms.CharField(required=False,widget=forms.Textarea(
         attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style)'}
     ))
-    keywords=forms.CharField(widget=forms.Textarea(
+    keywords=forms.CharField(required=False,widget=forms.Textarea(
         attrs={'placeholder':'Keywords or section names to help chatbot extract relevant parts of the document to analyze'}
     ))
 class ThemeType(forms.Form):
@@ -86,12 +70,12 @@ class ThemeType(forms.Form):
         ('Essay', 'Essay'),
     ]
     theme_type=forms.ChoiceField(choices=SUMMARY_CHOICE)
-    instruction=forms.CharField(widget=forms.Textarea(
+    instruction=forms.CharField(required=False,widget=forms.Textarea(
         attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style):'}
     ))
 
 class IdentifyViewpoint(forms.Form):
-    instruction=forms.CharField(widget=forms.Textarea(
+    instruction=forms.CharField(required=True,widget=forms.Textarea(
         attrs={'placeholder':'Participants generally trust medical professionals about the flu and vaccine'}
     ))
 class CompareViewpoint(forms.Form):
@@ -99,13 +83,13 @@ class CompareViewpoint(forms.Form):
         'required': 'Please enter your question option.'},widget=forms.Textarea(
         attrs={'placeholder':'Input your Question'}
     ))
-    instruction=forms.CharField(widget=forms.Textarea(
+    instruction=forms.CharField(required=False,widget=forms.Textarea(
         attrs={'placeholder':'Participant 1, 2, 3, 4, 5 and 6 are male. Participants 7, 8, 9, 10, 11 and 12 are female."'}
     ))
-    instruction_only=forms.CharField(widget=forms.Textarea(
+    instruction_only=forms.CharField(required=False,widget=forms.Textarea(
         attrs={'placeholder':'Additional instructions regarding your desired response from chatbot (e.g., length, style)'}
     ))
-    keywords=forms.CharField(widget=forms.Textarea(
+    keywords=forms.CharField(required=False,widget=forms.Textarea(
         attrs={'placeholder':'Keywords or section names to help chatbot extract relevant parts of the document to analyze'}
     ))
 
@@ -119,18 +103,18 @@ class ExcelForm(forms.Form):
         ('Codebook', 'Codebook'),
         ('Essay', 'Essay'),
     ]
-    file_column=forms.ChoiceField()
+    file_column=forms.ChoiceField(choices=[])
     theme_type=forms.ChoiceField(choices=excel_choices)
-    theme_instructions=forms.CharField(widget=forms.Textarea(attrs={
+    theme_instructions=forms.CharField(required=False,widget=forms.Textarea(attrs={
         'placeholder':'Additional instructions regarding your desired response.Focus on contradicting views. Reply in French'}
     ))
 
 class CategoriesForm(forms.Form):
-    file_column=forms.ChoiceField()
-    categories=forms.CharField(widget=forms.Textarea(attrs={
+    file_column=forms.ChoiceField(choices=[])
+    categories=forms.CharField(required=False,widget=forms.Textarea(attrs={
         'placeholder':'Specify the categories (separated by commas),  happy, neutral, sad'
     }))
-    categorize_instructions=forms.CharField(widget=forms.Textarea(attrs={
+    categorize_instructions=forms.CharField(required=False,widget=forms.Textarea(attrs={
         'placeholder':'Additional instructions regarding your desired response.Focus on contradicting views. Reply in French'
     }))
   

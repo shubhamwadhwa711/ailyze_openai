@@ -4,42 +4,45 @@
 {% load widget_tweaks %} 
 <div id="choiceva">
     {% if forms %}
-    {% if name=='Excel' %}
+    {% if name == 'Excel' %}
     <label for="excel_column_value">Select the column name to analyze (only the first row in the first sheet will be read)</label>
-    <select name="file_column" id="excel_column_value">
+    <select name="file_column" id="excel_column_value" required>
         <option value="">--Please choose an option--</option>
         {% for i  in choices %}
         <option value="{{i}}">{{i}}</option>
         {% endfor %}
-    </select>
+    </select><br>
     <label for="theme_t"> Theme Type </label>
-    <select name="theme_type" id="theme_t">
+    <select name="theme_type" id="theme_t" required>
         <option value="">--Please choose an option--</option>
         <option value="Codebook">Codebook</option>
         <option value="Essay">Essay</option>
-    </select>
+    </select><br>
     <label for="theme_ins"> Theme Instruction </label>
-    <input type="text" name="theme_instructions" id="theme_ins" placeholder="Additional instructions regarding your desired response">
-    {% endif %}
+    <textarea name="theme_instructions" rows="4" cols="50" placeholder="Additional instructions regarding your desired response"></textarea>
 
-    {% if name=='ExcelCategory' %}
+ 
+    {% elif name == 'ExcelCategory' %}
     <label for="excel_column_value_cat">Select the column name to analyze (only the first row in the first sheet will be read):</label>
-    <select name="file_column" id="excel_column_value_cat">
+    <select name="file_column" id="excel_column_value_cat" required>
         <option value="">--Please choose an option--</option>
         {% for i  in choices %}
         <option value="{{i}}">{{i}}</option>
         {% endfor %}
-    </select>
+    </select><br>
     <label for="categor"> Categories</label>
-    <input type="text" name="categories" id="categor" placeholder="Specify the categories (separated by commas):">
+    <textarea name="categories" rows="4" cols="50" placeholder="Specify the categories (separated by commas):"></textarea>
     <label for="categor_ins"> Categories Instruction</label>
-    <input type="text" name="categorize_instructions" id="categor_ins" placeholder="Categorize each text into one or more categories. Happy means elated and blessed. Sad means disappointed or grief. Neutral is anything in between.'">
-   {% else %}
-   {% for f in forms %}
-   {{f.label}}{{f}}{{f.errors|striptags}}
-   {% endfor %}
-    {% endif %}
-{% endif %}
+    <textarea name="categorize_instructions" rows="4" cols="50" placeholder="Categorize each text into one or more categories. Happy means elated and blessed. Sad means disappointed or grief. Neutral is anything in between.'""></textarea>
+
+ {% else %}
+    {% for f in forms %}
+    {{f.label}}{{f}}{{f.errors|striptags}}<br>
+    {% endfor %}
+ {% endif %}
+ {% endif %}
+
+
 
     
 </div>

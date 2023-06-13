@@ -2,48 +2,178 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
  {%load static %}
 {% load widget_tweaks %} 
-<div id="choiceva">
-    {% if forms %}
+{% if forms %}
+<div class="conatiner">
+    <div class="border p-3 m-1">
+ 
     {% if name == 'Excel' %}
     <label for="excel_column_value">Select the column name to analyze (only the first row in the first sheet will be read)</label>
-    <select name="file_column" id="excel_column_value" required>
+    <select  class="form-select" name="file_column" id="excel_column_value" required>
         <option value="">--Please choose an option--</option>
         {% for i  in choices %}
         <option value="{{i}}">{{i}}</option>
         {% endfor %}
     </select><br>
     <label for="theme_t"> Theme Type </label>
-    <select name="theme_type" id="theme_t" required>
+    <select class="form-select" name="theme_type" id="theme_t" required>
         <option value="">--Please choose an option--</option>
         <option value="Codebook">Codebook</option>
         <option value="Essay">Essay</option>
     </select><br>
-    <label for="theme_ins"> Theme Instruction </label>
-    <textarea name="theme_instructions" rows="4" cols="50" placeholder="Additional instructions regarding your desired response"></textarea>
+    <div>
+        <label for="theme_ins" data-bs-toggle="collapse" data-bs-target="#collapsetheme" aria-expanded="false" aria-controls="collapseExample" class="border form-control d-flex">
+            Theme Instruction(optional)
+       </label>
+        <div class="collapse" id="collapsetheme">
+            <div class="card card-body">
+                <textarea name="theme_instructions" rows="4" cols="50" placeholder="Additional instructions regarding your desired response"></textarea>
+            </div>
+          </div>
+         </div>
+
+   
 
  
     {% elif name == 'ExcelCategory' %}
-    <label for="excel_column_value_cat">Select the column name to analyze (only the first row in the first sheet will be read):</label>
-    <select name="file_column" id="excel_column_value_cat" required>
-        <option value="">--Please choose an option--</option>
-        {% for i  in choices %}
-        <option value="{{i}}">{{i}}</option>
-        {% endfor %}
-    </select><br>
-    <label for="categor"> Categories</label>
-    <textarea name="categories" rows="4" cols="50" placeholder="Specify the categories (separated by commas):"></textarea>
-    <label for="categor_ins"> Categories Instruction</label>
-    <textarea name="categorize_instructions" rows="4" cols="50" placeholder="Categorize each text into one or more categories. Happy means elated and blessed. Sad means disappointed or grief. Neutral is anything in between.'""></textarea>
+            <div class="mt-3"> 
+            <label for="excel_column_value_cat" class="mt-3">Select the column name to analyze (only the first row in the first sheet will be read):</label>
+            <select  class="form-select" name="file_column" id="excel_column_value_cat" required>
+                <option value="">--Please choose an option--</option>
+                {% for i  in choices %}
+                <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+            </select><br>
+            <label  data-bs-toggle="collapse" data-bs-target="#collapsecate" aria-expanded="false" aria-controls="collapseExample" class="border form-control d-flex">
+                Categorize Instruction(optional)
+        </label>
+        <div class="collapse" id="collapsecate">
+            <div class="card card-body">
+            <label for="categor"> Categories</label>
+            <textarea name="categories" rows="4" cols="50" placeholder="Specify the categories (separated by commas):"></textarea>
+            <label for="categor_ins"> Categories Instruction</label>
+            <textarea name="categorize_instructions" rows="4" cols="50" placeholder="Categorize each text into one or more categories. Happy means elated and blessed. Sad means disappointed or grief. Neutral is anything in between.'"></textarea>
+        </div>
+        </div>
+        </div>
 
- {% else %}
-    {% for f in forms %}
-    {{f.label}}{{f}}{{f.errors|striptags}}<br>
-    {% endfor %}
- {% endif %}
- {% endif %}
 
 
+    {% elif name == 'summarize' %}
+    <div class="sumary heading fs-6  ">
+        Choose Summary type :
+        <div class="my-2">
+            {{forms.summary}}
+        </div>
+        <div class="sumary-instrction">
+            <label  data-bs-toggle="collapse" data-bs-target="#collapsesummary" aria-expanded="false" aria-controls="collapseExample" class="my-1 form-control d-flex">
+                Summary  Instruction(optional):
+           </label>
+           <div class="collapse" id="collapsesummary">
+            <div class="card card-body">
+                <div class="card-heading">
+                    Instruction :
+                    <textarea name="{{forms.instruction.name}}" rows="4" cols="50" placeholder="Additional instructions regarding your desired response from chatbot (e.g., length, style)"></textarea>
+          
+                </div>
+            
+    </div>
+        </div>
+
+        </div>
+ 
+     
+    </div> 
+      
+     
+
+    {% elif name == 'question' %}
+                <div class="quesion-heading"> 
+                    <div class="my-1">Ask your Question :</div>
+                    <textarea name="{{forms.question.name}} "rows="4" cols="55" placeholder="'Input your Question'" required></textarea>
+                </div>  
+                <label  data-bs-toggle="collapse" data-bs-target="#collapsequestion" aria-expanded="false" aria-controls="collapseExample" class=" form-control my-3 d-flex">
+                    Question Instruction(optional)
+            </label>
+            <div class="collapse" id="collapsequestion">
+                <div class="card card-body">
+                    <div class="quesion-instruction">
+                        <div > Instruction :</div>
+                        <textarea name="{{forms.instruction.name}}" rows="4" cols="50" placeholder="Additional instructions regarding your desired response from chatbot (e.g., length, style)"></textarea>
+                    </div>
+                    <div class="question-keywords">
+                        <div> Keywords :</div>
+                        <textarea name="{{forms.keywords.name}}" rows="4" cols="50" placeholder="Keywords or section names to help chatbot extract relevant parts of the document to analyze"></textarea>
+                    </div>
+                   
+          
+                </div>
+            </div>
+
+    {% elif name == 'theme' %}
+            <div class="sumary heading fs-6  "> 
+                Choose Theme Type :
+            <div class="my-2">
+                {{forms.theme_type}}
+            </div>
+            <div class="my-2">
+                <label  data-bs-toggle="collapse" data-bs-target="#collapsetheme" aria-expanded="false" aria-controls="collapseExample" class="my-3 form-control d-flex">
+                    Theme Instruction (optional)
+            </label>
+            <div class="collapse" id="collapsetheme">
+                <div class="card card-body">
+                    <div > Instruction :</div>
+                    <textarea name="{{forms.instruction.name}}" rows="4" cols="50" placeholder="Additional instructions regarding your desired response from chatbot (e.g., length, style)"></textarea>
+                </div>
+            </div>
+            </div>
+            
+            </div>
+            
+            
+
+    {% elif name == 'frequency' %}
+        <div class="heading fs-6">
+            Instruction :
+        <div class="frequency-instruction">
+            <textarea name="{{forms.instruction.name}}" rows="4" cols="55" placeholder="Participants generally trust medical professionals about the flu and vaccine"></textarea>
+            
+        </div>
+        </div>
 
     
+    {% else %}
+    <div class="question-heading fs-6">
+        Ask your Question :
+        <div class=" my-1">
+          <textarea name="{{forms.question.name}} "rows="4" cols="55" placeholder="'Input your Question'" required></textarea>
+        </div>
+    </div>
+    <div >
+        <label  data-bs-toggle="collapse" data-bs-target="#collapseviewpoints" aria-expanded="false" aria-controls="collapseExample" class=" my-3 form-control d-flex">
+            Compare viewpoints Instruction :
+    </label>
+    <div class="collapse" id="collapseviewpoints">
+        <div>
+            <div >Instructions : <textarea name="{{forms.instruction.name}}" rows="4" cols="55" placeholder='Participant 1, 2, 3, 4, 5 and 6 are male. Participants 7, 8, 9, 10, 11 and 12 are female.'></textarea></div>
+        </div>
+        
+        <div> 
+            <label  data-bs-toggle="collapse" data-bs-target="#collapseviewpointsinstruction" aria-expanded="false" aria-controls="collapseExample" class=" my-3 form-control d-flex">
+                Compare viewpoints Instruction (optional):
+        </label>
+        <div id="collapseviewpointsinstruction">
+            <div> Additional Instruction :  <textarea name="{{forms.instruction_only.name}}" rows="4" cols="55" placeholder='Additional instructions regarding your desired response from chatbot (e.g., length, style)'></textarea></div>
+            <div >keywords :<textarea name="{{forms.keywords.name}}" rows="4" cols="55" placeholder='Keywords or section names to help chatbot extract relevant parts of the document to analyze'></textarea></div>
+
+        </div>
+    </div> 
+
+    </div>
+     
+    
+    {% endif %}
+
+</div>    
 </div>
+{% endif %}
 

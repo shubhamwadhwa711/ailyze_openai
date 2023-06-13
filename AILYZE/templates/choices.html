@@ -2,19 +2,24 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
  {%load static %}
 {% load widget_tweaks %}
-  {% if choices %}
+{% if choices %}
+<div class="container">
+  <div class="border p-3 mt-3">
+    <div class="heading">
+      <h6> Choose the type Analysis :</h6  >
+    </div>
     {% for j in choices %}
     {% csrf_token %}
-    <button type="submit" name="choice_button" value={{j}} class="btn btn-sm rounded-pill text-black fw-bold px-3 m-3 btn-outline-info" hx-post="{% url 'query' %}"  hx-vals='{"choice": "{{ j }}" }'  hx-target="#choiceva" hx-swap="outerHTML">{{ j }} </button><br>
+    <button type="submit" class="btn btn-sm rounded-pill mt-3 btn-outline-primary text-black" name="choice_button" value={{j}}  hx-post="{% url 'query' %}"  hx-vals='{"choice": "{{ j }}" }'  hx-target="#choiceva">{{ j }} </button><br>
    {% endfor %} 
- {% endif %}
+
+ </div>
+</div>
+{% endif %}
 
 <div id="choiceva">
   {% include 'chioceform.html'%}
-
 </div>
-
-
 <script>
     document.body.addEventListener('htmx:configRequest', (event) => {
       event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';

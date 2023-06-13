@@ -19,7 +19,8 @@ import os
 import pandas as pd
 import openpyxl
 from django.contrib import messages
-
+from apps.users.email import *
+from . email import *
 
 class Home(View):
     def get(self,request):
@@ -89,40 +90,41 @@ class Getchoices(View):
         return render(request, "filedata.html", context)
     
     def post(self,request):
-        file=request.FILES.getlist('file')
-        for f in file:
-            extension=os.path.splitext(f.name)[1]
-            if extension.lower()  in ['.xlsx','.xls','.csv']:
-                df=pd.read_excel(f)
-                column_values=df.columns.values.tolist()
-                request.session['column_values']=column_values
-                choices=Excelchoice.choices()
-            else:
-                choices=Anaylsis.choices()
-            return render(request, 'choices.html',{'choices':choices})
-        return render(request,'filedata.html')
-            
-
+        form = UplaodFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.fields['email']=self.request.user
+            # form.save()
+            upload_option = form.cleaned_data['upload_option']
+            files=request.FILES.getlist('file')
+            for f in files:
+                extension=os.path.splitext(f.name)[1]
+                if extension.lower()  in ['.xlsx','.xls','.csv']:
+                    df=pd.read_excel(f)
+                    column_values=df.columns.values.tolist()
+                    request.session['column_values']=column_values
+                    choices=Excelchoice.choices()
+                else:
+                    choices=Anaylsis.choices()
+                choices=[choice.replace("_"," ") for choice in choices]
+                return render(request, 'choices.html',{'choices':choices})
+        return render(request,'filedata.html',{'form':form})
                 
 
 
 
-
-
-     
-
 class UserQuestion(View):
     a = {
-        Anaylsis.Summarize.value: lambda request,name: render(request,'chioceform.html',{'forms':SummerizeType(),"name":None}),
-        Anaylsis.Ask_a_specific_question.value:  lambda request,name:render(request,'chioceform.html',{'forms':SPecificQuestion(),"name":None}),
-        Anaylsis.Conduct_thematic_analysis.value: lambda request,name: render(request,'chioceform.html',{'forms':ThemeType(),"name":None}),
-        Anaylsis.Identidy_which_document_contain_a_certain_viewpoint.value:  lambda request,name: render(request,'chioceform.html',{'forms':IdentifyViewpoint(),"name":None}),
-        Anaylsis.Compare_viewpoints_across_documents.value:  lambda request,name: render(request,'chioceform.html',{'forms':CompareViewpoint(),"name":None}),
+        Anaylsis.Summarize.value: lambda request,name: render(request,'chioceform.html',{'forms':SummerizeType(),"name":'summarize'}),
+        Anaylsis.Ask_a_specific_question.value:  lambda request,name:render(request,'chioceform.html',{'forms':SPecificQuestion(),"name":'question'}),
+        Anaylsis.Conduct_thematic_analysis.value: lambda request,name: render(request,'chioceform.html',{'forms':ThemeType(),"name":'theme'}),
+        Anaylsis.Identify_which_document_contain_a_certain_viewpoint.value:  lambda request,name: render(request,'chioceform.html',{'forms':IdentifyViewpoint(),"name":'frequency'}),
+        Anaylsis.Compare_viewpoints_across_documents.value:  lambda request,name: render(request,'chioceform.html',{'forms':CompareViewpoint(),"name":'viewpoints'}),
         Excelchoice.Conduct_thematic_analysis_based_on_text_in_a_column.value:lambda request ,name:render(request,'chioceform.html',{'forms':ExcelForm(),'choices':request.session['column_values'],'name':name}),
         Excelchoice.Categorize_text_in_each_cell_in_a_column.value:lambda request, name:render(request,'chioceform.html',{'forms':CategoriesForm(),'choices':request.session['column_values'],'name':name})
     }
     def post(self, request):
         choice = request.POST.get('choice')
+        choice=choice.replace(" ","_")
         request.session['choice']=choice
         render_fun = self.a.get(choice)
         if not render_fun:
@@ -300,7 +302,8 @@ class Contactform(View):
     def post(self, request):
         form = ContactForm(request.POST)
         if form.is_valid():
-            form.save()
+            obj = form.save()
+            Contact_email(obj.email)
             form = ContactForm()  
             success_message = "Your form has been successfully submitted."  # Success message
             return render(request, 'contact.html', {'form': form, 'success_message': success_message})

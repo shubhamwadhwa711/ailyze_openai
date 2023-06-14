@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render,HttpResponse,redirect
 from apps.users.forms import UserChangePassword,RegisterUser,SummerizeType,SPecificQuestion,ThemeType,IdentifyViewpoint,CompareViewpoint,UplaodFileForm,ContactForm,ExcelForm,CategoriesForm
 from django.contrib.auth.forms import AuthenticationForm
@@ -19,6 +21,8 @@ import os
 import pandas as pd
 import openpyxl
 from django.contrib import messages
+import json
+import ast
 from apps.users.email import *
 from . email import *
 
@@ -82,7 +86,6 @@ class ChangePassword(View):
     
 
 
-
 class Getchoices(View):
     def get(self, request):
         form = UplaodFileForm()
@@ -91,10 +94,28 @@ class Getchoices(View):
     
     def post(self,request):
         form = UplaodFileForm(request.POST, request.FILES)
+        upload_option=request.session['upload_option']
+        if upload_option=='previous':
+            files=request.POST.getlist('files')
+            files=Files.objects.filter(id__in =files)      
+            extension=[os.path.splitext(f.file.name)[1] for f in files]
+            if '.xls' in extension or '.xlsx' in extension or '.csv' in extension:
+                if len(files)!=1:
+                    raise Exception(" only one excel file is accepted , plz remove all other files")
+                for f in files:
+                    df=pd.read_excel(f.file)
+                    column_values=df.columns.values.tolist()
+                    request.session['column_values']=column_values
+                    choices=Excelchoice.choices()
+            else:
+                choices=Anaylsis.choices()
+            choices=[choice.replace("_"," ") for choice in choices]
+            return render(request, 'choices.html',{'choices':choices,'previous':True})
+
+        
         if form.is_valid():
             form.fields['email']=self.request.user
             # form.save()
-            upload_option = form.cleaned_data['upload_option']
             files=request.FILES.getlist('file')
             for f in files:
                 extension=os.path.splitext(f.name)[1]
@@ -107,8 +128,18 @@ class Getchoices(View):
                     choices=Anaylsis.choices()
                 choices=[choice.replace("_"," ") for choice in choices]
                 return render(request, 'choices.html',{'choices':choices})
-        return render(request,'filedata.html',{'form':form})
+        return render(request,'choices.html',{'formerror':form.errors})
                 
+
+class oldFiles(View):   
+    def get(self, request):
+        upload_option = request.GET.get("upload_option")
+        request.session['upload_option']=upload_option
+        files = Files.objects.filter(email=request.user.email)
+        files=[{'id':file.id, 'file':str(file.file).split('/')[1]} for file in files]
+        if upload_option == "new":
+            return render(request, "upload_file.html")
+        return render(request, "old_files.html",{"files":files})
 
 
 
@@ -138,9 +169,7 @@ class ProcessQuery(View):
         form = UplaodFileForm(request.POST, request.FILES)
         
         uploaded_file = request.FILES.getlist('file')
-        upload_option = request.POST['upload_option']
         choice = request.session.get('choice')
-        file_column=request.POST['file_column']
         if form.is_valid():
             if not isinstance(uploaded_file, list):
                 uploaded_file = [uploaded_file]
@@ -289,10 +318,10 @@ class DetailPage(View):
     def get(self,request,pk):
         obj = get_object_or_404(UserQuery, id=pk)
         data = {
-            'question': obj.question,
+            'question': ast.literal_eval(obj.question),
             'answer': obj.answer,
         }
-        return JsonResponse(data)
+        return render(request,'detailpage.html',{'data':data})
     
 class Contactform(View):
     def get(self, request):

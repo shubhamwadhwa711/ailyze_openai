@@ -12,13 +12,13 @@ urlpatterns = [
     path('user-profile/', views.UserProfile.as_view(),name="user-profile"),
     path('contact/', views.Contactform.as_view(),name="contact"),
     path('about/', views.About.as_view(), name='about'),
-
-
     path('get-form/',views.Getchoices.as_view(),name='get-form'),
     path('query/',views.UserQuestion.as_view(),name='query'),
     path('processing/',views.ProcessQuery.as_view(),name='processing'),
     path('view-list/', views.ShowData.as_view(), name='view-list'),
-    path('detailpage/<int:pk>', views.DetailPage.as_view(),name="detailpage")
+    path('detailpage/<int:pk>', views.DetailPage.as_view(),name="detailpage"),
+    path('old-files/', views.oldFiles.as_view(), name="old-files")
+  
   
     
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)

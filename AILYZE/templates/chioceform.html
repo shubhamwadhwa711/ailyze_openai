@@ -22,7 +22,9 @@
     </select><br>
     <div>
         <label for="theme_ins" data-bs-toggle="collapse" data-bs-target="#collapsetheme" aria-expanded="false" aria-controls="collapseExample" class="border form-control d-flex">
-            Theme Instruction(optional)
+            Theme Instruction(optional)<span>       
+                <span class="fa fa-caret-down px-1"> </span>
+               </span> 
        </label>
         <div class="collapse" id="collapsetheme">
             <div class="card card-body">
@@ -44,7 +46,9 @@
                 {% endfor %}
             </select><br>
             <label  data-bs-toggle="collapse" data-bs-target="#collapsecate" aria-expanded="false" aria-controls="collapseExample" class="border form-control d-flex">
-                Categorize Instruction(optional)
+                Categorize Instruction(optional)<span>       
+                    <span class="fa fa-caret-down px-1"> </span>
+                   </span> 
         </label>
         <div class="collapse" id="collapsecate">
             <div class="card card-body">
@@ -66,7 +70,9 @@
         </div>
         <div class="sumary-instrction">
             <label  data-bs-toggle="collapse" data-bs-target="#collapsesummary" aria-expanded="false" aria-controls="collapseExample" class="my-1 form-control d-flex">
-                Summary  Instruction(optional):
+                Summary  Instruction(optional):          <span>       
+                    <span class="fa fa-caret-down px-1"> </span>
+                   </span> 
            </label>
            <div class="collapse" id="collapsesummary">
             <div class="card card-body">
@@ -92,7 +98,9 @@
                     <textarea name="{{forms.question.name}} "rows="4" cols="55" placeholder="'Input your Question'" required></textarea>
                 </div>  
                 <label  data-bs-toggle="collapse" data-bs-target="#collapsequestion" aria-expanded="false" aria-controls="collapseExample" class=" form-control my-3 d-flex">
-                    Question Instruction(optional)
+                    Question Instruction(optional)          <span>       
+                        <span class="fa fa-caret-down px-1"> </span>
+                       </span> 
             </label>
             <div class="collapse" id="collapsequestion">
                 <div class="card card-body">
@@ -117,7 +125,9 @@
             </div>
             <div class="my-2">
                 <label  data-bs-toggle="collapse" data-bs-target="#collapsetheme" aria-expanded="false" aria-controls="collapseExample" class="my-3 form-control d-flex">
-                    Theme Instruction (optional)
+                    Theme Instruction (optional)          <span>       
+                        <span class="fa fa-caret-down px-1"> </span>
+                       </span> 
             </label>
             <div class="collapse" id="collapsetheme">
                 <div class="card card-body">
@@ -150,7 +160,9 @@
     </div>
     <div >
         <label  data-bs-toggle="collapse" data-bs-target="#collapseviewpoints" aria-expanded="false" aria-controls="collapseExample" class=" my-3 form-control d-flex">
-            Compare viewpoints Instruction :
+            Compare viewpoints Instruction :          <span>       
+                <span class="fa fa-caret-down px-1"> </span>
+               </span> 
     </label>
     <div class="collapse" id="collapseviewpoints">
         <div>
@@ -159,7 +171,9 @@
         
         <div> 
             <label  data-bs-toggle="collapse" data-bs-target="#collapseviewpointsinstruction" aria-expanded="false" aria-controls="collapseExample" class=" my-3 form-control d-flex">
-                Compare viewpoints Instruction (optional):
+                Compare viewpoints Instruction (optional):          <span>       
+                    <span class="fa fa-caret-down px-1"> </span>
+                   </span> 
         </label>
         <div id="collapseviewpointsinstruction">
             <div> Additional Instruction :  <textarea name="{{forms.instruction_only.name}}" rows="4" cols="55" placeholder='Additional instructions regarding your desired response from chatbot (e.g., length, style)'></textarea></div>

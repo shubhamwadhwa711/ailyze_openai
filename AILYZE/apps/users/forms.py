@@ -55,7 +55,7 @@ class UplaodFileForm(forms.ModelForm):
         ('new', 'Upload New File'),
         ('previous', 'Upload Files from Previous Uploads'),
     ]
-    upload_option = forms.ChoiceField(choices=UPLOAD_CHOICES, widget=forms.Select())
+    upload_option = forms.ChoiceField(choices=UPLOAD_CHOICES, widget=forms.Select(),required=False)
     file = MultiFileField(min_num=1, max_num=10, max_file_size=1024*1024*5)
     # file = forms.FileField(widget=MultipleFileInput(attrs={
     #     'multiple':True

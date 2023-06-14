@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Answer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td> 
+            <div>
+                <p>Summary: {{ data.question.Summary_type }}</p>
+                <p>Instructions: {{ data.question.Summary_instruction }}</p>
+            </div>
+        </td>
+        <td> {% if data.answer %} {{ data.answer }} {% else %} N/A {% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock %}

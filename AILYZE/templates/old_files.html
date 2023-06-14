@@ -1,0 +1,19 @@
+<div class="files-dropdown py-2 border  px-3">
+    <label for="files" class="form-label">Select files from your previous uploaded files :</label>
+    <form>
+        {% for i in files %}
+        <div>
+            <input type="checkbox" id="file_{{ i.id }}" name="files" value="{{ i.id }}">
+            <label for="file_{{ i.id }}">{{ i.file }}</label>
+        </div>
+        {% endfor %}
+        <button id="submitBtn" class="btn btn-primary  btn-sm my-2" hx-post="/get-form/" hx-target="#choice1" hx-trigger="click" hx-swap="outerHTML">Send</button>
+    </select>
+    </div>
+    <div id="choice1">
+        {% include 'choices.html' %}
+    </div>
+
+</form>
+
+   

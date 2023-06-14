@@ -3,9 +3,9 @@
 
     <div class="container-fluid sticky-top">
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-dark p-0">
-                <a href="/user-profile" class="navbar-brand">
-                    <h1 class="text-white">AI<span class="text-dark">.</span>Tech</h1>
+            <nav class="navbar navbar-expand-lg navbar-light navbar-blue p-0">
+                <a href="{% url 'home' %}" class="navbar-brand">
+                    <img alt="logo" src="https://raw.githubusercontent.com/ailyze/sample_data/main/logo.png" height="39" width="200">
                 </a>
                 <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
                     data-bs-target="#navbarCollapse">
@@ -16,27 +16,27 @@
                         <a href="/" class="nav-item nav-link active">Home</a>
                         <a href="/about" class="nav-item nav-link">About</a>
                         {% if not request.user.is_authenticated %}
-                            <a href="/get-form" class="nav-item nav-link">Try AI Tech</a>
+                            <a href="/get-form" class="nav-item nav-link">Try Ailyze Lite</a>
+                            {% else %}
+                            <a href="/user-profile" class="nav-item nav-link">Try Ailyze Pro</a>
                         {% endif %}
                         <a href="/contact/" class="nav-item nav-link">Contact</a>
                         <!-- <butaton type="button" class="btn text-white p-0 d-none d-lg-block mx-2" data-bs-toggle="modal"
                         data-bs-target="#searchModal" ><i class="fa fa-search"></i></butaton> -->
-
-
                     {% if request.user.is_authenticated %}
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-id-card"></i></a>
-                        <div class="dropdown-menu bg-light mt-2">
-                            <a href="/user-profile" class="nav-item nav-link text-dark fs-6">Profile</a>
-                            <a href="/change-password" class="nav-item nav-link text-dark fs-6">Change password</a>
-                            <a href="/logout" class="nav-item nav-link text-dark fs-6">Logout</a>
+                        <div class="nav-link dropdown-toggle user-icon" data-bs-toggle="dropdown"><i class="fa-solid fa-user"></i></div>
+                        <div class="dropdown-menu bg-light mt-2 navbar-custom-dropdown ">
+                            <!-- <a href="/user-profile" class="nav-item nav-link text-dark fs-6">Profile</a> -->
+                            <a href="/change-password" class="nav-item nav-link">Change password</a>
+                            <a href="/logout" class="nav-item nav-link">Logout</a>
                         </div>
                     </div>
                     
                     {% else %}
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Sign in | Register</a>
-                        <div class="dropdown-menu bg-light mt-2">
+                        <div class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Sign in | Register</div>
+                        <div class="dropdown-menu bg-light mt-2 navbar-custom-dropdown ">
                             <a href="/login" class="dropdown-item">Sign-In</a>
                             <a href="/register" class="dropdown-item">Register</a> 
                         </div>

@@ -1,0 +1,19 @@
+{% load widget_tweaks %}
+<form action="/processing/" method="POST" enctype="multipart/form-data" >
+    {% csrf_token %}
+    <div class="form-group">
+
+    </div>
+    <div class="form-group cm-new-fileupload">
+    <label for="{{ form.file.id_for_label }}" class="form-label"></label>
+        {% csrf_token %}
+        {% render_field form.file hx-post="/get-form/" hx-target="#choice" hx-encoding="multipart/form-data" class="form-control"%}
+        <span class="text-danger">{{ form.file.errors|striptags }}</span>
+</div>
+    <div id="choice">
+        {% include 'choices.html' %}
+    </div>
+    <div class="d-grid my-4 ">
+        <button class="btn btn-success btn-sm px-3 justify-content-center" type="submit">SUBMIT</button>
+        </div>
+</form>

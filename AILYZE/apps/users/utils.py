@@ -14,6 +14,7 @@ import json
 import aiohttp
 import time
 import logging
+import os
 
 import io
 openai.api_key = "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"
@@ -551,7 +552,7 @@ class SumarrizeClass(ProcessApi):
         n_tokens = []
 
         if len(contexts) == 1 and summary_type == 'Essay':
-            if settings.ENVIRONMENT != "dev":
+            # if settings.ENVIRONMENT != "dev":
                 response = openai.ChatCompletion.create(model=model,
                                                         temperature=temperature,
                                                         messages=[{"role": "system", "content": "You summarize text."},
@@ -562,7 +563,7 @@ class SumarrizeClass(ProcessApi):
                 summaries.append(response['choices'][0]['message']['content'].strip())
                 n_tokens.append(len(tokenizer.encode(response['choices'][0]['message']['content'].strip())))
 
-            elif len(contexts) == 1 and summary_type == 'Bullet points':
+        elif len(contexts) == 1 and summary_type == 'Bullet points':
                 response = openai.ChatCompletion.create(model=model,
                                                         temperature=temperature,
                                                         messages=[{"role": "system", "content": "You summarize text."},
@@ -571,9 +572,9 @@ class SumarrizeClass(ProcessApi):
 
                 summaries.append(response['choices'][0]['message']['content'].strip())
                 n_tokens.append(len(tokenizer.encode(response['choices'][0]['message']['content'].strip())))
-            else:
-                summaries.append(" your got the answer")
-                n_tokens.append(" these are your tokens")
+            # else:
+            #     summaries.append(" your got the answer")
+            #     n_tokens.append(" these are your tokens")
 
         else:
             pass

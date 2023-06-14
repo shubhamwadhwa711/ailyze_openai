@@ -26,29 +26,36 @@
     <div class="row justify-content-center">
         <div class="col-6">
             <div class="border shadow-sm rounded px-3 py-4 " >
-            <form action="/processing/" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
                 <label for="{{ form.upload_option.id_for_label }}">Choose a file option:</label>
-                <select  class="form-select" name="{{ form.upload_option.name }}" id="{{ form.upload_option.id_for_label }}">
+                <select  class="form-select" name="{{ form.upload_option.name }}"  hx-get="/old-files" hx-trigger="change delay:0.3s" hx-target="#cm-prevFile-form" id="{{ form.upload_option.id_for_label }}">
+                    <option>Select Your  Value</option>
                     <option value="new">Upload New File</option>
-                    <option value="previous">Upload Files from Previous Uploads</option>
+                    <option value="previous">Upload Files from Previous Files</option>
                 </select>
-                </div>
-                <div class="form-group">
-                <label for="{{ form.file.id_for_label }}" class="form-label"></label>
-                    {% csrf_token %}
-                    {% render_field form.file hx-post="/get-form/" hx-target="#choice" hx-encoding="multipart/form-data" class="form-control"%}
-                    <span class="text-danger">{{ form.file.errors|striptags }}</span>
-            </div>
-                <div id="choice">
-                    {% include 'choices.html' %}
-                </div>
-                <div class="d-grid my-4 ">
-                    <button class="btn btn-success btn-sm px-3 justify-content-center" type="submit">SUBMIT</button>
+                <div id="cm-newFile-form" style="display: none;">
+                    {% include 'upload_file.html'%}
+                    <!-- <form action="/processing/" method="POST" enctype="multipart/form-data" >
+                        {% csrf_token %}
+                        <div class="form-group">
+                        
+                        </div>
+                        <div class="form-group cm-new-fileupload">
+                        <label for="{{ form.file.id_for_label }}" class="form-label"></label>
+                            {% csrf_token %}
+                            {% render_field form.file hx-post="/get-form/" hx-target="#choice" hx-encoding="multipart/form-data" class="form-control"%}
+                            <span class="text-danger">{{ form.file.errors|striptags }}</span>
                     </div>
-            </form>
-            </form>
+                        <div id="choice">
+                            {% include 'choices.html' %}
+                        </div>
+                        <div class="d-grid my-4 ">
+                            <button class="btn btn-success btn-sm px-3 justify-content-center" type="submit">SUBMIT</button>
+                            </div>
+                    </form> -->
+                </div>
+                <div id="cm-prevFile-form" style="display:none;">
+                    {% include 'old_files.html' %}
+                </div>
         </div>
 
 
@@ -57,19 +64,36 @@
 </div>
 
 
-<!-- <script>
-    $(document).ready(function() {
-        $('#id_file').hide();  
-        $('#id_upload_option').change(function() {
-            if ($(this).val() === 'new') {
-                $('#id_file').show();
-            } else {
-                $('#id_file').hide();
-            }
-        });
-    });
-</script> -->
+<style>
+    #select#id_upload_option{
+        margin-bottom: 20px;
+    }
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>    
+<script>
+    jQuery(document).ready(function($){
+        function getPreviousData(){
+            console.log("calling previous data");
+        }
+        $('#id_upload_option').on('change', function(){
+            var val = $(this).val();
+            console.log("Value changed ", val);
+            if(val === 'new'){
+                $('#cm-newFile-form').show();
+                $('#cm-prevFile-form').hide();
+            }else if(val === 'previous'){
+                $('#cm-prevFile-form').show();
+                $('#cm-newFile-form').hide();
+                getPreviousData();
+            }
+            else{
+                $('.#m-prevFile-form').hide();
+                $('#cm-newFile-form').hide();
+            }
+        })
+    })
+    
+</script>
 
 
 {% endblock %}

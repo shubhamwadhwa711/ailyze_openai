@@ -6,7 +6,7 @@
     <div class="container pt-5">
         <div class="row g-5 pt-5">
             <div class="col-lg-6 align-self-center text-center text-lg-start mb-lg-5">
-                <h1 class="display-2 text-white mb-4 animated slideInRight">Welcome {{request.user}}</h1>
+                <h1 class="display-2 text-white mb-4 animated slideInRight">Welcome {{request.user.username}}</h1>
             </div>
             <div class="col-lg-6 align-self-end text-center text-lg-end">
                 <img class="img-fluid" src="{% static 'img/hero-img.png' %}" alt="" style="max-height: 300px;">
@@ -16,37 +16,39 @@
 </div> 
 <!-- Hero End --> 
 
+<div clas="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="border shadow-sm my-5">
+                <div class="card m-3">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <a href="/get-form" class="btn btn-primary d-flex justify-content-center mx-5">AILYZE PRO </a>
+                    </div>
+                </div>
+                <p class="py-3 px-3">
+                <a class="btn btn-primary d-flex justify-content-center" data-bs-toggle="collapse" href="#collapseExample" hx-get="/view-list" hx-target="#list" role="button" aria-expanded="false" aria-controls="collapseExample">
+                   View Past Questions and Answers 
+            <span>       
+             <span class="fa fa-caret-down px-1"> </span>
+            </span> 
+        </a>
+    </p>
+            <div class="collapse" id="collapseExample">
+                <div id="list">
+        
+                </div> 
+            </div>
 
 
-<div class="container pt-5">
-    <a href="/get-form"><div class="btn btn-sm border rounded-pill text-black  fw-bold px-3 m-3 bg-info">Ai.tech  </div></a>
-</div>
-
-<p>
-  <p>
-    <a class="btn btn-sm border rounded-pill text-black fw-bold px-3 m-3 bg-info"
-       data-bs-toggle="collapse"
-       href="#multiCollapseExample1"
-       role="button"
-       aria-expanded="True"
-       hx-get="/view-list"
-       hx-target="#list"
-       hx-swap="outerHTML" 
-       aria-controls="multiCollapseExample1"
-    >
-        View Past Questions and Answers <i class="fa fa-caret-down"></i>
-    </a>
-</p>
-<div class="row" id="list">
-  <div class="collapse multi-collapse" id="multiCollapseExample1">
-      <table class="table table-bordered">
-        <div id="list">
-  
-        </div>     
-      </table>
-  </div>
-</div>
 
 </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+
 
 {% endblock%}
